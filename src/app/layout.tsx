@@ -12,6 +12,11 @@ import {
   getFacebookPixelInitScript,
   getFacebookPixelNoscriptUrl,
 } from "@/lib/analytics/facebook-pixel-snippet";
+import {
+  GOOGLE_ADS_ID,
+  getGoogleAdsInitScript,
+  getGoogleAdsScriptSrc,
+} from "@/lib/analytics/google-ads-snippet";
 import { getYandexMetrikaNoscriptUrl } from "@/lib/analytics/yandex-metrika-snippet";
 import { getResolvedAnalytics } from "@/lib/cms/settings";
 import { rootMetadata } from "@/utils/metadata";
@@ -59,6 +64,8 @@ export default async function RootLayout({
   const lang = htmlLangHeader === "de" ? "de" : "en";
   const facebookPixelScript = getFacebookPixelInitScript(FACEBOOK_PIXEL_ID);
   const facebookNoscript = getFacebookPixelNoscriptUrl(FACEBOOK_PIXEL_ID);
+  const googleAdsScriptSrc = getGoogleAdsScriptSrc(GOOGLE_ADS_ID);
+  const googleAdsInitScript = getGoogleAdsInitScript(GOOGLE_ADS_ID);
 
   return (
     <html
@@ -73,6 +80,15 @@ export default async function RootLayout({
             id="facebook-pixel"
             dangerouslySetInnerHTML={{ __html: facebookPixelScript }}
           />
+        ) : null}
+        {googleAdsScriptSrc && googleAdsInitScript ? (
+          <>
+            <script async src={googleAdsScriptSrc} />
+            <script
+              id="google-ads-gtag"
+              dangerouslySetInnerHTML={{ __html: googleAdsInitScript }}
+            />
+          </>
         ) : null}
       </head>
       <body className="antialiased">
