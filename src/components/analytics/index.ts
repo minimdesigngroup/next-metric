@@ -8,3 +8,7 @@ export {
   LINKEDIN_LEAD_CONVERSION_ID,
   trackLinkedInLeadConversion,
 } from "./linkedin-conversion";
+export {
+  GOOGLE_ADS_CONVERSION_SEND_TO,
+  trackGoogleAdsLeadConversion,
+} from "./google-ads-conversion";

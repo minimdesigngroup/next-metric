@@ -19,6 +19,7 @@ import {
   getLeadFileKind,
   LeadFileTypeIcon,
 } from "@/components/molecules/LeadFileTypeIcon";
+import { trackGoogleAdsLeadConversion } from "@/components/analytics";
 
 interface ContactFormProps {
   ui: SiteContent["ui"];
@@ -94,6 +95,11 @@ export function ContactForm({
       if (previewUrl) URL.revokeObjectURL(previewUrl);
     };
   }, [previewUrl]);
+
+  useEffect(() => {
+    if (!submitted) return;
+    trackGoogleAdsLeadConversion();
+  }, [submitted]);
 
   useEffect(() => {
     if (!captcha.siteKey || !widgetHostRef.current) return;
