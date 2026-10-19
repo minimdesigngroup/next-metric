@@ -1,8 +1,11 @@
-import type { ResolvedTag } from "@/lib/cms/tags";
+export type TagDisplaySource = {
+  slug: string;
+  label: string;
+};
 
 export function resolveTagDisplays(
   slugs: readonly string[],
-  taxonomy: readonly ResolvedTag[],
+  taxonomy: readonly TagDisplaySource[],
 ): Array<{ slug: string; label: string }> {
   const bySlug = new Map(
     taxonomy.map((tag) => [tag.slug.toLowerCase(), tag.label]),

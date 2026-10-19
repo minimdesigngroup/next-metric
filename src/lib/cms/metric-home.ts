@@ -269,7 +269,7 @@ async function resolveMetricHome(locale: Locale): Promise<MetricHomeContent> {
 /** Public homepage copy: static defaults merged with published CMS payload. */
 export function getMetricHomeResolved(locale: Locale) {
   return unstable_cache(() => resolveMetricHome(locale), [`metric-home-${locale}`], {
-    tags: ["cms", "metric-home", "home", "projects"],
+    tags: ["cms", "metric-home", "home", "projects", "tags"],
     revalidate: false,
   })();
 }

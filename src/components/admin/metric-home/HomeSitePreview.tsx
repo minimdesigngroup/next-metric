@@ -36,6 +36,7 @@ type Props = {
   dirty: boolean;
   faq: FaqDraft[];
   projects: ProjectOption[];
+  taxonomy?: Array<{ slug: string; en: string; de: string }>;
 };
 
 type Device = "desktop" | "mobile";
@@ -75,6 +76,7 @@ export function HomeSitePreview({
   dirty,
   faq,
   projects,
+  taxonomy = [],
 }: Props) {
   const t = useAdminT();
   const [device, setDevice] = useState<Device>("desktop");
@@ -155,7 +157,16 @@ export function HomeSitePreview({
       case "categories":
         return <MetricCategoriesSection locale={locale} home={home} />;
       case "case-studies":
-        return <MetricCaseStudiesSection locale={locale} home={home} />;
+        return (
+          <MetricCaseStudiesSection
+            locale={locale}
+            home={home}
+            taxonomy={taxonomy.map((tag) => ({
+              slug: tag.slug,
+              label: locale === "de" ? tag.de || tag.en : tag.en,
+            }))}
+          />
+        );
       case "services":
         return <MetricServicesSection locale={locale} home={home} />;
       case "workflow":

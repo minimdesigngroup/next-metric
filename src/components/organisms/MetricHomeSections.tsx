@@ -9,6 +9,10 @@ import { MetricCaseCard } from "@/components/molecules/MetricCaseCard";
 import type { MetricHomeContent } from "@/data/metric-home";
 import type { Locale } from "@/i18n/config";
 import { localePath, localeBriefHref } from "@/i18n/paths";
+import {
+  resolveTagDisplays,
+  type TagDisplaySource,
+} from "@/utils/tag-labels";
 
 const WORKFLOW_IMAGE_SIZE: Record<string, readonly [number, number]> = {
   "/images/metric/workflow/wf-1.png": [820, 518],
@@ -247,9 +251,11 @@ export function MetricCategoriesSection({
 export function MetricCaseStudiesSection({
   locale,
   home,
+  taxonomy = [],
 }: {
   locale: Locale;
   home: MetricHomeContent;
+  taxonomy?: readonly TagDisplaySource[];
 }) {
   const { caseStudies } = home;
   if (!caseStudies.items.length) return null;
@@ -271,19 +277,26 @@ export function MetricCaseStudiesSection({
         <div
           className="metric-case-studies__list"
         >
-          {caseStudies.items.map((item) => (
-            <MetricCaseCard
-              key={item.slug}
-              locale={locale}
-              href={localePath(locale, `/works/${item.slug}/`)}
-              tags={item.tags}
-              title={item.title?.trim() || item.author || item.slug}
-              description={item.description}
-              image={item.image}
-              imageAlt={`${item.title?.trim() || item.author || item.slug} — ${item.tags.slice(0, 2).join(", ") || "Amazon case study"}`}
-              viewLabel={caseStudies.viewLabel}
-            />
-          ))}
+          {caseStudies.items.map((item) => {
+            const tags = resolveTagDisplays(item.tags, taxonomy);
+            const name = item.title?.trim() || item.author || item.slug;
+            return (
+              <MetricCaseCard
+                key={item.slug}
+                locale={locale}
+                href={localePath(locale, `/works/${item.slug}/`)}
+                tags={tags}
+                title={name}
+                description={item.description}
+                image={item.image}
+                imageAlt={`${name} — ${tags
+                  .slice(0, 2)
+                  .map((tag) => tag.label)
+                  .join(", ") || "Amazon case study"}`}
+                viewLabel={caseStudies.viewLabel}
+              />
+            );
+          })}
         </div>
 
         <div className="metric-case-studies__more">

@@ -8,6 +8,7 @@ import {
   type FaqDraft,
 } from "@/components/admin/list-cms/types";
 import { EMBED } from "@/lib/cms/embeds";
+import { getAdminTags } from "@/lib/cms/tags";
 
 function toFaqDraft(row: {
   id: string;
@@ -52,7 +53,7 @@ export default async function AdminHomePage({
   const supabase = createSupabaseAdminClient();
 
   // Always load FAQ — full-page site preview needs items on every section.
-  const [{ data: home }, { data: translations }, { data: projectRows }, faqRes] =
+  const [{ data: home }, { data: translations }, { data: projectRows }, faqRes, adminTags] =
     await Promise.all([
       supabase.from("metric_home").select("status").eq("id", 1).maybeSingle(),
       supabase.from("metric_home_translations").select("locale, payload"),
@@ -64,6 +65,7 @@ export default async function AdminHomePage({
         .from("metric_faq_items")
         .select(`*, ${EMBED.faqTranslations}`)
         .order("sort_order"),
+      getAdminTags(),
     ]);
 
   const byLocale = Object.fromEntries(
@@ -120,6 +122,11 @@ export default async function AdminHomePage({
       status={(home?.status as "draft" | "published") ?? "published"}
       payloads={{ en: enPayload, de: dePayload }}
       projects={projects}
+      taxonomy={adminTags.map((tag) => ({
+        slug: tag.slug,
+        en: tag.labels.en,
+        de: tag.labels.de,
+      }))}
       faq={faq}
       faqEditId={params.edit ?? null}
       saved={Boolean(params.saved)}

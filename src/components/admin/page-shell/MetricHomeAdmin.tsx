@@ -49,6 +49,7 @@ type Props = {
   status: "draft" | "published";
   payloads: { en: Record<string, unknown>; de: Record<string, unknown> };
   projects: ProjectOption[];
+  taxonomy?: Array<{ slug: string; en: string; de: string }>;
   faq: FaqDraft[];
   faqEditId?: string | null;
   saved?: boolean;
@@ -59,6 +60,7 @@ export function MetricHomeAdmin({
   status,
   payloads,
   projects,
+  taxonomy = [],
   faq,
   faqEditId = null,
   saved = false,
@@ -285,6 +287,7 @@ export function MetricHomeAdmin({
           dirty={dirty}
           faq={faq}
           projects={projects}
+          taxonomy={taxonomy}
         />
       </div>
     </AdminPageShell>
